@@ -41,9 +41,11 @@ jobs:
       - name: Run model training (MLflow Run)
         run: |
           cd MLProject
-          # FIX: Hapus --no-conda, cukup pakai --env-manager=local
-          mlflow run . --env-manager=local
+          # PERBAIKAN UTAMA:
+          # Menambahkan --experiment-name agar sesuai dengan yang ada di script Python
+          mlflow run . --env-manager=local --experiment-name sentiment-analysis-playstore
         env:
+          # Menyimpan hasil run di folder lokal mlruns agar bisa di-upload
           MLFLOW_TRACKING_URI: "file:./mlruns"
       
       - name: List MLflow artifacts
