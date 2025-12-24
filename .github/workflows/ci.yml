@@ -13,7 +13,7 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # <-- Saya update ke v4
       
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -27,12 +27,15 @@ jobs:
       
       - name: Run MLflow Project
         run: |
-          cd MLProject
+          # PENTING: Pastikan folder 'MLProject' benar-benar ada di repo Anda.
+          # Jika file python ada di halaman depan (root), hapus baris 'cd' ini.
+          cd MLProject 
           mlflow run . --env-manager=local
       
       - name: Upload MLflow artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # <-- INI PERBAIKANNYA (v3 jadi v4)
         if: always()
         with:
           name: mlflow-artifacts
+          # Pastikan path ini sesuai. Jika di atas pakai 'cd MLProject', ini sudah benar.
           path: MLProject/mlruns/
