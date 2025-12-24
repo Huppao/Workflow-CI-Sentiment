@@ -1,6 +1,7 @@
-name: Sentiment_Analysis_Training
+name: sentiment-analysis
 
-python_env: python_env.yaml
+# Pastikan baris ini merujuk ke conda.yml
+conda_env: conda.yml
 
 entry_points:
   main:
