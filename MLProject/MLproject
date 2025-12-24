@@ -1,6 +1,6 @@
 name: Sentiment_Analysis_Training
 
-conda_env: conda.yaml
+python_env: python_env.yaml
 
 entry_points:
   main:
