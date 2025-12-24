@@ -23,6 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          # Install MLflow dan library yang dibutuhkan project
           pip install mlflow==2.19.0
           pip install scikit-learn==1.5.2
           pip install pandas==2.2.3
@@ -33,20 +34,28 @@ jobs:
         run: |
           echo "Checking MLProject directory..."
           ls -la MLProject/
-          echo "Checking dataset..."
-          ls -la MLProject/dataset_preprocessing/
+          # Memastikan file MLproject ada, karena 'mlflow run' butuh file ini
+          if [ ! -f "MLProject/MLproject" ]; then
+            echo "Error: File MLproject tidak ditemukan!"
+            exit 1
+          fi
       
-      - name: Run model training
+      - name: Run model training (MLflow Run)
         run: |
           cd MLProject
-          python modelling.py
+          # PERUBAHAN PENTING DI SINI:
+          # Menggunakan 'mlflow run .' untuk menjalankan project sesuai standar.
+          # Flag --env-manager=local berarti menggunakan dependencies yang sudah diinstall di step sebelumnya.
+          mlflow run . --no-conda --env-manager=local
         env:
+          # Memastikan tracking disimpan di folder lokal mlruns agar bisa di-upload
           MLFLOW_TRACKING_URI: "file:./mlruns"
       
       - name: List MLflow artifacts
         if: always()
         run: |
-          echo "MLflow runs directory:"
+          echo "Checking generated artifacts..."
+          # Cek folder mlruns di dalam folder MLProject
           ls -la MLProject/mlruns/ || echo "No mlruns directory found"
       
       - name: Upload training artifacts
@@ -54,5 +63,6 @@ jobs:
         if: always()
         with:
           name: mlflow-training-artifacts
+          # Mengambil seluruh folder mlruns yang terbentuk
           path: MLProject/mlruns/
           retention-days: 30
